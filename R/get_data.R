@@ -64,7 +64,8 @@ data_gaps_table <- data_gaps_data |>
   mutate(Link = glue("<button type='button' class='btn' id='{row_id}'>Details</button>")) |>
   select(Name, Sources, Topics, Type, Link,
     Headline, Questions = `Research Questions`, Impact,
-    Report = `Report Title`, Author, Date, URL, Topics_Text
+    Update = `Contextual Update`, Evidence, Report = `Report Title`, Author,
+    Date, URL, Topics_Text
   ) |>
   ungroup()
 write_csv(data_gaps_table, "data/data_gaps_table.csv")
