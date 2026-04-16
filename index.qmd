@@ -56,6 +56,14 @@ function showModal(rowData) {
       <strong>Types of Gap:</strong> ${rowData.Type || 'No description available'}
     </div>
     
+    <div style="margin-bottom: 1rem;">
+      <strong>Quote:</strong> ${rowData.Evidence || ''}
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+      <strong>Contextual Update:</strong> ${rowData.Update || 'No known update'}
+    </div>
+    
     <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px;">
       <strong>${rowData.Report}</strong>
       <p>${rowData.Author || 'No author available'} (${rowData.Date}) </p>
