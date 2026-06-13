@@ -9,130 +9,108 @@ library(glue)
 library(stringr)
 library(rairtable)
 
-# Set up Airtable access
+# Set up Airtable access (API key must be in AIRTABLE_API_KEY env var)
 set_airtable_api_key(Sys.getenv("AIRTABLE_API_KEY"))
 
-# Grab data tables from Airtable
-data_gaps_at <- airtable("Data Gaps", airtable_base_id)
-data_gaps <- read_airtable(data_gaps_at) |>
-  as_tibble()
+# Prefer a local sample CSV for testing when available
+sample_path_env <- Sys.getenv("SAMPLE_REPORTS_CSV", unset = "")
+local_data_path <- if (nzchar(sample_path_env)) sample_path_env else "data/sample_reports.csv"
 
-reports_at <- airtable("Reports", airtable_base_id)
-reports <- read_airtable(reports_at) |>
-  as_tibble()
+if (file.exists(local_data_path)) {
+  message("Using local sample CSV for reports: ", local_data_path)
+  reports_raw <- readr::read_csv(local_data_path, col_types = readr::cols(.default = "c")) |> as_tibble()
+} else {
+  # Read from Airtable when no local sample is available
+  reports_at <- airtable("Research Reports", airtable_base_id)
+  reports_raw <- read_airtable(reports_at) |> as_tibble()
+}
 
-types_at <- airtable("Gap Types", airtable_base_id)
-types <- read_airtable(types_at) |>
-  as_tibble()
+# Normalize and extract fields we need
+normalize_multi_value <- function(value) {
+  if (is.null(value) || length(value) == 0 || all(is.na(value))) {
+    return("")
+  }
+  if (is.list(value)) {
+    value <- unlist(value)
+  }
+  if (!is.character(value)) {
+    value <- as.character(value)
+  }
+  value <- value[!is.na(value) & value != ""]
+  if (length(value) == 0) {
+    return("")
+  }
+  parts <- str_split(value, "\\s*[;,]\\s*") |> unlist()
+  parts <- str_trim(parts)
+  parts <- parts[parts != ""]
+  if (length(parts) == 0) {
+    return("")
+  }
+  paste(unique(parts), collapse = "; ")
+}
 
-topics_at <- airtable("Topics", airtable_base_id)
-topics <- read_airtable(topics_at) |>
-  as_tibble()
-
-sources_at <- airtable("Data Sources", airtable_base_id)
-sources <- read_airtable(sources_at) |>
-  as_tibble() |>
-  select(airtable_record_id, Source = Name)
-
-# Join
-data_gaps_data <- data_gaps |>
-  filter(Publishable) |>
-  # Link report and get info
-  mutate(Report = unlist(`Report Link`)) |>
-  left_join(reports, by = c("Report" = "airtable_record_id")) |>
-  # Link Filters
-  mutate(Type = map_chr(`Name (from Gap Types)`, ~ paste(.x, collapse = "; "))) |>
-  mutate(Topics = map_chr(`Topic (from Topics)`, ~ paste(.x, collapse = "; "))) |>
-  mutate(Sources = map_chr(`Name (from Sources)`, ~ paste(.x, collapse = "; ")))
-
-data_gaps_table <- data_gaps_data |>
+reports <- reports_raw |>
   mutate(
-    across(
-      any_of(topics$Topic),
-      ~ if_else(
-        is.na(.x),
-        "",
-        paste0(cur_column(), " (", .x, ")")
-      )
-    )
+    Title = coalesce(Title, ""),
+    Authors = coalesce(Authors, ""),
+    Date = coalesce(as.character(`Publication Date`), ""),
+    Description = coalesce(Description, ""),
+    Report_Format = coalesce(`Report Format`, ""),
+    Publication_Status = coalesce(`Publication Status`, ""),
+    URL = coalesce(!!rlang::sym("URL"), "")
   ) |>
-  mutate(across(any_of(topics$Topic), ~ na_if(.x, ""))) |>
-  unite(Topics_Text, any_of(topics$Topic), sep = "; ", na.rm = TRUE) |>
-  # Content for modal
+  mutate(
+    Type = map_chr(.data[["Publication type"]], normalize_multi_value),
+    Topics = map_chr(.data[["Topic/theme"]], normalize_multi_value)
+  )
+
+# Description snippet for table
+reports <- reports |>
+  mutate(Description_snippet = if_else(nchar(Description) > 200, paste0(str_sub(Description, 1, 200), "..."), Description))
+
+# Row ids and link button for modal
+reports <- reports |>
   mutate(row_id = row_number()) |>
   rowwise() |>
-  mutate(Link = glue("<button type='button' class='btn' id='{row_id}'>Details</button>")) |>
-  select(Name, Sources, Topics, Type, Link,
-    Headline, Questions = `Research Questions`, Impact,
-    Update = `Contextual Update`, Evidence, Report = `Report Title`, Author,
-    Date, URL, Topics_Text
-  ) |>
+  mutate(Link = glue("<button type='button' class='btn' id='r-{row_id}'>Details</button>")) |>
   ungroup()
-write_csv(data_gaps_table, "data/data_gaps_table.csv")
 
-reports_data <- reports |>
-  unnest_longer(`Data Gaps`) |>
-  left_join(data_gaps, by = c("Data Gaps" = "airtable_record_id")) |>
-  arrange(desc(Date)) |>
-  # Filters
-  mutate(Type = map_chr(`Name (from Gap Types)`, ~ paste(.x, collapse = "; "))) |>
-  mutate(Topics = map_chr(`Topic (from Topics)`, ~ paste(.x, collapse = "; "))) |>
-  mutate(Sources = map_chr(`Name (from Sources)`, ~ paste(.x, collapse = "; ")))
+# Output the main reports table CSV used by OJS
+reports_table <- reports |>
+  transmute(
+    Title = Title,
+    Authors = Authors,
+    Date = Date,
+    Topics = Topics,
+    Type = Type,
+    Description_snippet = Description_snippet,
+    Description = Description,
+    Report_Format = Report_Format,
+    Publication_Status = Publication_Status,
+    URL = URL,
+    Link = Link,
+    row_id = row_id
+  )
 
-gaps_lookup <- reports_data |>
-  mutate(
-    Gap_Text = glue("<strong>{Name}</strong><p><b>Type of Data Gap: </b>{Type}<br><b>Sources: </b>{Sources} <br><b>Topics: </b>{Topics}</p>")
-  ) |>
-  select(airtable_record_id, Gap_Text) |>
-  group_by(airtable_record_id) %>%
-  summarise(GapText = str_c(Gap_Text, collapse = "<br>"))
-
-sources_lookup <- reports_data |>
-  select(airtable_record_id, Sources) |>
-  distinct() |>
-  group_by(airtable_record_id) %>%
-  summarise(Sources = str_c(Sources, collapse = "; "))
-
-types_lookup <- reports_data |>
-  select(airtable_record_id, Type) |>
-  distinct() |>
-  group_by(airtable_record_id) %>%
-  summarise(Type = str_c(Type, collapse = "; "))
-
-topics_lookup <- reports_data |>
-  select(airtable_record_id, Topics) |>
-  distinct() |>
-  group_by(airtable_record_id) %>%
-  summarise(Topics = str_c(Topics, collapse = "; "))
-
-reports_table <- reports_data |>
-  select(-c(Sources, Topics, Type)) |>
-  left_join(gaps_lookup, by = "airtable_record_id") |>
-  left_join(sources_lookup, by = "airtable_record_id") |>
-  left_join(types_lookup, by = "airtable_record_id") |>
-  left_join(topics_lookup, by = "airtable_record_id") |>
-  select(Title = `Report Title`, Author, Date, Sources, Topics, Type, GapText, URL) |>
-  distinct() |>
-  mutate(row_id = row_number()) |>
-  mutate(URL = glue("<button type='button' class='btn btn-quarto' onclick='window.open(\"{URL}\", \"_blank\")'>View Report</button>")) |>
-  mutate(Link = glue("<button type='button' class='btn' id='r-{row_id}'>Related Gaps</button>")) |>
-  rowwise() |>
-  select(Title, Author, Date, URL, Link, Sources, Topics, Type, GapText) |>
-  ungroup()
 write_csv(reports_table, "data/reports_table.csv")
 
-# Drop down options
-sources_opts <- sources |>
-  select(Source) |>
-  arrange(Source)
-write_csv(sources_opts, "data/sources_opts.csv")
+# Build option CSVs for filters (deduplicated)
+extract_opts <- function(x) {
+  # x is a character vector where entries may use commas or semicolons as separators
+  vals <- x[ x != "" ]
+  if (length(vals) == 0) return(tibble(Value = character()))
+  parts <- str_split(vals, "\\s*[;,]\\s*") |> unlist()
+  parts <- str_trim(parts)
+  parts <- parts[ parts != "" ]
+  tibble(Value = sort(unique(parts)))
+}
 
-topics_opts <- topics |>
-  select(Topic) |>
-  arrange(Topic)
+publication_types_opts <- extract_opts(reports_table$Type)
+colnames(publication_types_opts) <- c("Publication type")
+write_csv(publication_types_opts, "data/publication_types_opts.csv")
+
+topics_opts <- extract_opts(reports_table$Topics)
+colnames(topics_opts) <- c("Topic/theme")
 write_csv(topics_opts, "data/topics_opts.csv")
 
-types_opts <- types |>
-  select(Name, Description) |>
-  arrange(Name)
-write_csv(types_opts, "data/types_opts.csv")
+message("Wrote data/reports_table.csv, data/publication_types_opts.csv, data/topics_opts.csv")

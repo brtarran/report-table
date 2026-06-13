@@ -1,137 +1,16 @@
 ---
-title: "Poverty Data Gaps"
+title: "BFI RSU resources"
+
 ---
-This data explorer has been produced as part of the [Royal Statistical Society](https://rss.org.uk/) and [Centre for Public Data’s](https://www.centreforpublicdata.org/) research into poverty data gaps in the UK, funded by the [Joseph Rowntree Foundation Insight Infrastructure](https://insightinfrastructure.co.uk/) team.  
+<!-- This data explorer has been produced as part of the [Royal Statistical Society](https://rss.org.uk/) and [Centre for Public Data’s](https://www.centreforpublicdata.org/) research into poverty data gaps in the UK, funded by the [Joseph Rowntree Foundation Insight Infrastructure](https://insightinfrastructure.co.uk/) team.  
 
 We intend for the explorer to be a living tool that will help those at the forefront of anti-poverty research and intervention share data gaps they encounter in the course of their work.  **To that end, we ask interested individuals and organisations to fill out our form below, where they can tell us about specific issues they’ve had with the datasets they use for poverty research.** Further details about the gaps identified here and our methodology for collecting them can be viewed on our [Taxonomy](Taxonomy.qmd) and [Methodology](methodology.qmd) pages.
 
 **We encourage anyone who makes use of data relating to poverty in the UK to submit information about gaps they have encountered.  Please do so by completing this form:**
 
-[Add a new data gap](https://airtable.com/appCGMtdXOaqhWh4y/pagmTyuvNXMeVZMMS/form){target="_blank" .btn .btn-quarto}
+[Add a new data gap](https://airtable.com/appCGMtdXOaqhWh4y/pagmTyuvNXMeVZMMS/form){target="_blank" .btn .btn-quarto} -->
 
 {{< include OJS/filters.qmd >}}
-
-
-::: {.panel-tabset}
-
-## Data gaps
-
-```{ojs}
-modal = html`<div id="modal-overlay">
-  <div id="modal-content">
-    <button id="modal-close">X</button>
-    <div id="modal-body"></div>
-  </div>
-</div>`
-
-// Helper functions for modal
-function showModal(rowData) {
-  const overlay = document.getElementById('modal-overlay');
-  const modalBody = document.getElementById('modal-body');
-  
-  modalBody.innerHTML = `
-    <h2>${rowData.Name}</h2>
-    
-    <div style="margin-bottom: 1rem;">
-      <strong>Headline finding:</strong> ${rowData.Headline || 'No description available'}
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-      <strong>Research Questions:</strong> ${rowData.Questions || 'No description available'}
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-      <strong>Impact:</strong> ${rowData.Impact || 'No description available'}
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-      <strong>Sources:</strong> ${rowData.Sources || 'No description available'}
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-      <strong>Topics:</strong> ${rowData.Topics_Text || 'No description available'}
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-      <strong>Types of Gap:</strong> ${rowData.Type || 'No description available'}
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-      <strong>Quote:</strong> ${rowData.Evidence || ''}
-    </div>
-    
-    <div style="margin-bottom: 1rem;">
-      <strong>Contextual Update:</strong> ${rowData.Update || 'No known update'}
-    </div>
-    
-    <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px;">
-      <strong>${rowData.Report}</strong>
-      <p>${rowData.Author || 'No author available'} (${rowData.Date}) </p>
-      <a href=${rowData.URL} target=_blank>View Report</a>
-    </div>
-    
-  `;
-  
-  overlay.style.display = 'flex';
-}
-
-function hideModal() {
-  const overlay = document.getElementById('modal-overlay');
-  if (overlay) overlay.style.display = 'none';
-}
-
-// Set up close handlers after modal is rendered
-{
-  setTimeout(() => {
-    const closeBtn = document.getElementById('modal-close');
-    const overlay = document.getElementById('modal-overlay');
-    
-    if (closeBtn) {
-      closeBtn.addEventListener('click', hideModal);
-    }
-    
-    if (overlay) {
-      overlay.addEventListener('click', (e) => {
-        if (e.target.id === 'modal-overlay') hideModal();
-      });
-    }
-  }, 100);
-}
-```
-
-
-::: {.ojs-table .gaps-table}
-
-```{ojs}
-viewof gaps_table = Inputs.table(filtered_gaps, {
-  columns: ["Name", "Type", "Sources", "Topics", "Link"], 
-  header: {
-    Type: "Type of Data Gap",
-  },
-  sort: false,
-  format: {
-    Link: (testValue, row_index) => {
-      const div = document.createElement('div');
-      div.innerHTML = testValue;
-      
-      const button = div.querySelector('button');
-      if (button) {
-        button.addEventListener('click', () => {
-          const rowData = filtered_gaps[row_index];
-          showModal(rowData);
-        });
-      }
-      
-      return div;
-    }
-  },
-  rows: 20
-})
-```
-
-:::
-
-## Reports
 
 ::: {.ojs-table .reports-table}
 
@@ -150,16 +29,17 @@ function showReportsModal(rowData) {
   
   modalBody2.innerHTML = `
     <h2>${rowData.Title}</h2>
-    
-    <div style="margin-bottom: 1rem;">
-      ${rowData.Author} (${rowData.Date})
-    </div>
+    <div style="margin-bottom: 1rem; font-weight: 500;">${rowData.Authors || ''} (${rowData.Date || ''})</div>
 
-    <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px;">
-      ${rowData.GapText}
-    </div>
+    <div style="margin-bottom: 1rem;"><strong>Publication type:</strong> ${rowData.Type || 'N/A'}</div>
+    <div style="margin-bottom: 1rem;"><strong>Topic/theme:</strong> ${rowData.Topics || 'N/A'}</div>
+    <div style="margin-bottom: 1rem;"><strong>Format / Status:</strong> ${rowData.Report_Format || ''} — ${rowData.Publication_Status || ''}</div>
 
-    
+    <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">${rowData.Description || ''}</div>
+
+    <div>
+      <a href="${rowData.URL}" target="_blank" class="btn btn-quarto">View Report</a>
+    </div>
   `;
   
   overlay2.style.display = 'flex';
@@ -192,7 +72,7 @@ function hideReportsModal() {
 
 ```{ojs}
 viewof reports_table = Inputs.table(filtered_reports, {
-  columns: ["Title", "Author", "Date", "URL", "Link"], 
+  columns: ["Title", "Authors", "Date", "Type", "Topics", "Link"], 
   sort: false,
   format: {
     Link: (testValue, row_index) => {
@@ -209,7 +89,7 @@ viewof reports_table = Inputs.table(filtered_reports, {
       
       return div;
     },
-    URL: Test => {
+    Description_snippet: Test => {
       const div = document.createElement('div');
       div.innerHTML = Test;
       return div;
@@ -221,11 +101,8 @@ viewof reports_table = Inputs.table(filtered_reports, {
 
 :::
 
-:::
-
 ```{ojs}
 // Read in data
-data_gaps = FileAttachment("data/data_gaps_table.csv").csv({ typed: true })
 data_reports = FileAttachment("data/reports_table.csv")
   .csv({ typed: true })
   .then(data => data.map(d => ({ ...d, Date: String(d.Date) })))
@@ -233,29 +110,22 @@ data_reports = FileAttachment("data/reports_table.csv")
 
 ```{ojs}
 // Dropdown options
-sources_opts = FileAttachment("data/sources_opts.csv").csv({ typed: true })
-types_opts = FileAttachment("data/types_opts.csv").csv({ typed: true })
 topics_opts = FileAttachment("data/topics_opts.csv").csv({ typed: true })
+
+publication_types_opts = FileAttachment("data/publication_types_opts.csv").csv({ typed: true })
 ```
 
 ```{ojs}
 // Filter data
-filtered_gaps = data_gaps.filter(function(x) {
-  if (sources.length > 0 && !sources.some(s => x.Sources.includes(s))) return false;
-  if (types.length > 0 && !types.some(t => x.Type.includes(t))) return false;
-  if (topics.length > 0 && !topics.some(topic => x.Topics.includes(topic))) return false;
-  return true;
-})
 filtered_reports = data_reports.filter(function(x) {
-  if (sources.length > 0 && !sources.some(s => x.Sources.includes(s))) return false;
-  if (types.length > 0 && !types.some(t => x.Type.includes(t))) return false;
-  if (topics.length > 0 && !topics.some(topic => x.Topics.includes(topic))) return false;
+  if (typeof publication_types !== 'undefined' && publication_types.length > 0 && !publication_types.some(pt => (x.Type || "").includes(pt))) return false;
+  if (typeof topics !== 'undefined' && topics.length > 0 && !topics.some(topic => (x.Topics || "").includes(topic))) return false;
+  const kw = (typeof keyword_search !== 'undefined' && keyword_search) ? String(keyword_search).trim().toLowerCase() : '';
+  if (kw) {
+    const title = (x.Title || '').toLowerCase();
+    const desc = (x.Description || '').toLowerCase();
+    if (!title.includes(kw) && !desc.includes(kw)) return false;
+  }
   return true;
 })
 ```
-
-::: grid
-::: {.g-col-12 .g-col-md-12 }
-![](assets/img/combined-logos.png)
-:::
-:::

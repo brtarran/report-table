@@ -1,39 +1,33 @@
 
 ::: {.grid}
 
-::: {.g-col-12 .g-col-md-4}
+::: {.g-col-12 .g-col-md-6}
+
 ```{ojs}
 //| panel: sidebar
-viewof sources = {
-  const options = sources_opts.map(d => d[Object.keys(d)[0]]);
+viewof publication_types = {
+  const options = publication_types_opts.map(d => d[Object.keys(d)[0]]);
   const container = document.createElement("div");
   container.classList.add("filter-name");
-  
   const label = document.createElement("label");
-  label.textContent = "Data sources:";
+  label.textContent = "Publication type:";
   label.style.cssText = "display: block; margin-bottom: 4px; font-weight: 500;";
-  
   const selectedContainer = document.createElement("div");
   selectedContainer.style.cssText = "display: flex; flex-wrap: wrap; gap: 6px; min-height: 38px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 8px; background: white; align-items: center;";
-  
   const buttonWrapper = document.createElement("div");
   buttonWrapper.style.cssText = "position: relative; width: 100%;";
-  
   const dropdownButton = document.createElement("button");
-  dropdownButton.textContent = "Select sources...";
+  dropdownButton.textContent = "Select publication types...";
   dropdownButton.style.cssText = "width: 100%; padding: 8px 12px; text-align: left; background: white; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #333; display: block;";
-  
   const dropdownMenu = document.createElement("div");
   dropdownMenu.style.cssText = "display: none; position: fixed; max-height: 200px; overflow-y: auto; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.1); box-sizing: border-box;";
-  
   let selected = [];
-  
   const updateView = () => {
     selectedContainer.innerHTML = "";
     selected.forEach(item => {
       const tag = document.createElement("span");
       tag.style.cssText = "display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: #e3f2fd; border-radius: 3px; font-size: 13px; color: #333;";
-      tag.innerHTML = `${item} <span style="cursor: pointer; font-weight: bold;">×</span>`;
+      tag.innerHTML = `${item} <span style=\"cursor: pointer; font-weight: bold;\">×</span>`;
       tag.querySelector("span").onclick = () => {
         selected = selected.filter(s => s !== item);
         updateView();
@@ -42,15 +36,13 @@ viewof sources = {
       };
       selectedContainer.appendChild(tag);
     });
-    
     if (selected.length === 0) {
       const placeholder = document.createElement("span");
-      placeholder.textContent = "No sources selected (showing all data)";
+      placeholder.textContent = "No publication types selected (showing all)";
       placeholder.style.cssText = "color: #999; font-style: italic;";
       selectedContainer.appendChild(placeholder);
     }
   };
-  
   options.forEach(option => {
     const item = document.createElement("div");
     item.textContent = option;
@@ -58,23 +50,16 @@ viewof sources = {
     item.onmouseenter = () => item.style.background = "#f0f0f0";
     item.onmouseleave = () => item.style.background = selected.includes(option) ? "#e3f2fd" : "white";
     item.onclick = () => {
-      if (selected.includes(option)) {
-        selected = selected.filter(s => s !== option);
-      } else {
-        selected.push(option);
-      }
+      if (selected.includes(option)) selected = selected.filter(s => s !== option); else selected.push(option);
       updateView();
       container.value = selected;
       container.dispatchEvent(new CustomEvent("input"));
     };
     dropdownMenu.appendChild(item);
   });
-  
   dropdownButton.onclick = () => {
     const isVisible = dropdownMenu.style.display === "block";
-    if (isVisible) {
-      dropdownMenu.style.display = "none";
-    } else {
+    if (isVisible) dropdownMenu.style.display = "none"; else {
       const rect = dropdownButton.getBoundingClientRect();
       dropdownMenu.style.top = `${rect.bottom + 2}px`;
       dropdownMenu.style.left = `${rect.left}px`;
@@ -82,19 +67,12 @@ viewof sources = {
       dropdownMenu.style.display = "block";
     }
   };
-  
-  document.addEventListener("click", (e) => {
-    if (!container.contains(e.target) && !dropdownMenu.contains(e.target)) {
-      dropdownMenu.style.display = "none";
-    }
-  });
-  
+  document.addEventListener("click", (e) => { if (!container.contains(e.target) && !dropdownMenu.contains(e.target)) dropdownMenu.style.display = "none"; });
   container.appendChild(label);
   container.appendChild(selectedContainer);
   buttonWrapper.appendChild(dropdownButton);
   container.appendChild(buttonWrapper);
   document.body.appendChild(dropdownMenu);
-  
   updateView();
   container.value = selected;
   return container;
@@ -102,108 +80,7 @@ viewof sources = {
 ```
 :::
 
-::: {.g-col-12 .g-col-md-4}
-```{ojs}
-//| panel: sidebar
-viewof types = {
-  const options = types_opts.map(d => d[Object.keys(d)[0]]);
-  const container = document.createElement("div");
-  container.classList.add("filter-name");
-  
-  const label = document.createElement("label");
-  label.textContent = "Type of data gap:";
-  label.style.cssText = "display: block; margin-bottom: 4px; font-weight: 500;";
-  
-  const selectedContainer = document.createElement("div");
-  selectedContainer.style.cssText = "display: flex; flex-wrap: wrap; gap: 6px; min-height: 38px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 8px; background: white; align-items: center;";
-  
-  const buttonWrapper = document.createElement("div");
-  buttonWrapper.style.cssText = "position: relative; width: 100%;";
-  
-  const dropdownButton = document.createElement("button");
-  dropdownButton.textContent = "Select types of gap...";
-  dropdownButton.style.cssText = "width: 100%; padding: 8px 12px; text-align: left; background: white; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #333; display: block;";
-  
-  const dropdownMenu = document.createElement("div");
-  dropdownMenu.style.cssText = "display: none; position: fixed; max-height: 200px; overflow-y: auto; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.1); box-sizing: border-box;";
-  
-  let selected = [];
-  
-  const updateView = () => {
-    selectedContainer.innerHTML = "";
-    selected.forEach(item => {
-      const tag = document.createElement("span");
-      tag.style.cssText = "display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; background: #e3f2fd; border-radius: 3px; font-size: 13px; color: #333;";
-      tag.innerHTML = `${item} <span style="cursor: pointer; font-weight: bold;">×</span>`;
-      tag.querySelector("span").onclick = () => {
-        selected = selected.filter(s => s !== item);
-        updateView();
-        container.value = selected;
-        container.dispatchEvent(new CustomEvent("input"));
-      };
-      selectedContainer.appendChild(tag);
-    });
-    
-    if (selected.length === 0) {
-      const placeholder = document.createElement("span");
-      placeholder.textContent = "No gap types selected (showing all data)";
-      placeholder.style.cssText = "color: #999; font-style: italic;";
-      selectedContainer.appendChild(placeholder);
-    }
-  };
-  
-  options.forEach(option => {
-    const item = document.createElement("div");
-    item.textContent = option;
-    item.style.cssText = "padding: 8px 12px; cursor: pointer; user-select: none; color: #333;";
-    item.onmouseenter = () => item.style.background = "#f0f0f0";
-    item.onmouseleave = () => item.style.background = selected.includes(option) ? "#e3f2fd" : "white";
-    item.onclick = () => {
-      if (selected.includes(option)) {
-        selected = selected.filter(s => s !== option);
-      } else {
-        selected.push(option);
-      }
-      updateView();
-      container.value = selected;
-      container.dispatchEvent(new CustomEvent("input"));
-    };
-    dropdownMenu.appendChild(item);
-  });
-  
-  dropdownButton.onclick = () => {
-    const isVisible = dropdownMenu.style.display === "block";
-    if (isVisible) {
-      dropdownMenu.style.display = "none";
-    } else {
-      const rect = dropdownButton.getBoundingClientRect();
-      dropdownMenu.style.top = `${rect.bottom + 2}px`;
-      dropdownMenu.style.left = `${rect.left}px`;
-      dropdownMenu.style.width = `${rect.width}px`;
-      dropdownMenu.style.display = "block";
-    }
-  };
-  
-  document.addEventListener("click", (e) => {
-    if (!container.contains(e.target) && !dropdownMenu.contains(e.target)) {
-      dropdownMenu.style.display = "none";
-    }
-  });
-  
-  container.appendChild(label);
-  container.appendChild(selectedContainer);
-  buttonWrapper.appendChild(dropdownButton);
-  container.appendChild(buttonWrapper);
-  document.body.appendChild(dropdownMenu);
-  
-  updateView();
-  container.value = selected;
-  return container;
-}
-```
-:::
-
-::: {.g-col-12 .g-col-md-4}
+::: {.g-col-12 .g-col-md-6}
 ```{ojs}
 //| panel: sidebar
 viewof topics = {
@@ -302,8 +179,16 @@ viewof topics = {
   return container;
 }
 ```
-
 :::
 
+::: {.g-col-12 .g-col-md-12}
+```{ojs}
+//| panel: sidebar
+viewof keyword_search = Inputs.text({ placeholder: "Keyword search (title or description)" })
+```
+:::
+
+::: {.g-col-12 .g-col-md-12}
+:::
 
 :::

@@ -3,11 +3,10 @@ project:
   output-dir: docs
 
 website:
-  title: "Poverty Data Gaps"
-  site-url: "https://royal-statistical-society.github.io/poverty-data-gaps"
+  title: "BFI RSU resources"
+  site-url: ""
   image: "assets/img/featured.png"
   favicon: "assets/img/favicon.ico"
-  twitter-card: true
   open-graph: true
   page-footer:
     border: true
@@ -24,18 +23,10 @@ website:
     left:
       - text: Home
         href: index.qmd
-      - text: About the Project
-        href: about.qmd
-      - text: Taxonomy
-        href: Taxonomy.qmd
-      - text: Methodology
-        href: methodology.qmd
 
 format:
   html:
     theme: [flatly, assets/css/custom.scss]
-    toc: true
-    toc-location: left
     page-layout: full
     code-overflow: wrap
 
