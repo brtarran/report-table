@@ -188,7 +188,4 @@ viewof keyword_search = Inputs.text({ placeholder: "Keyword search (title or des
 ```
 :::
 
-::: {.g-col-12 .g-col-md-12}
-:::
-
 :::

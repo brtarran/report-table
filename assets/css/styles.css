@@ -1,0 +1,84 @@
+/*-- navbar --*/
+
+.navbar {
+  font-family: 'Source Sans 3';
+}
+
+#quarto-header {
+  border-bottom: 1px solid white;
+}
+
+
+/*-- body content --*/
+
+a.quarto-xref {
+  color: #000;
+  text-decoration-color: #e50076
+}
+
+a.quarto-xref:hover {
+  color: #e50076;
+  text-decoration-color: #e50076
+}
+
+p > a {
+  color: #000;
+  text-decoration-color: #e50076
+}
+
+p > a:hover {
+  color: #e50076;
+  text-decoration-color: #e50076
+}
+
+a {
+  color: #e50076
+}
+
+li > a {
+  color: #000;
+  text-decoration-color: #e50076
+}
+
+li > a:hover {
+  color: #e50076;
+  text-decoration-color: #e50076
+}
+
+figure>figcaption.quarto-float-caption-bottom {
+    margin-bottom: 2.5em;
+}
+
+figure.quarto-float-tbl figcaption.quarto-float-caption-top {
+  text-align: left;
+}
+
+.table {
+  --bs-table-striped-bg: #FFFFFF !important;
+}
+
+.cell-output-display {
+  margin-bottom: 2em;
+}
+
+
+/*-- sidebar --*/
+.sidebar nav[role=doc-toc] ul>li>a.active {
+  border-left: 1px solid #e50076;
+  color: #e50076 !important;
+}
+
+.sidebar nav[role=doc-toc] ul>li>a:hover {
+  color: #e50076 !important;
+}
+
+
+/*-- revealjs --*/
+
+.reveal .slide-logo {
+  bottom: unset !important;
+  right: unset !important;
+  top: 16px !important;
+  left: 16px !important;
+  max-height: 120px !important;
+}

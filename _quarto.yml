@@ -5,30 +5,27 @@ project:
 website:
   title: "BFI RSU resources"
   site-url: ""
-  image: "assets/img/featured.png"
-  favicon: "assets/img/favicon.ico"
+  image: 'https://www.bfi.org.uk/dist/client/0207614d447715c2d2b9.svg'
+  image-alt: Logo of British Film Institute
   open-graph: true
-  page-footer:
-    border: true
-    background: "#004b6c"
-    foreground: "white"
-    center:
-      - text: "© Copyright 2026 The Royal Statistical Society. Registered charity in England and Wales. No.306096."
+  repo-url: https://github.com/brtarran/report-table
+  repo-actions: [edit, issue]
   navbar:
-    search: true
-    logo: "assets/img/logo-white.svg"
-    logo-alt: "RSS logo"
-    pinned: true
-    title: false
+    background: "#e50076"
+    logo: https://www.bfi.org.uk/dist/client/0207614d447715c2d2b9.svg
+    logo-alt: Logo of British Film Institute
     left:
-      - text: Home
-        href: index.qmd
+      - href: index.qmd
+        text: Home
 
 format:
   html:
-    theme: [flatly, assets/css/custom.scss]
     page-layout: full
-    code-overflow: wrap
+    theme:
+      - cosmo
+      - assets/css/styles.scss
+    css: assets/css/styles.css
+    toc: true
 
 execute:
   echo: false

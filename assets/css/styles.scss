@@ -1,18 +1,24 @@
 /*-- scss:defaults --*/
+@import 'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap';
 
-$headlineColorCustom: #004b6c;
-$headingColorCustom: #004b6c;
-$bodyLinkColorCustom: #004b6c;
-$navLinkColorCustom: #004b6c;
-$sidebarLinkColorCustom: #004b6c;
-$footerTextColorCustom: #004b6c;
-$contrast-color: #004b6c;
-$link-color: #004b6c;
-$buttonHoverBgColorCustom: #004b6c;
-$borderColorCustom: #004b6c;
-$navbar-bg: #004b6c;
+#quarto-content {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: black;
+}
 
-$rss-yellow: #d3a41b;
+$headlineColorCustom: #e50076;
+$headingColorCustom: #e50076;
+$bodyLinkColorCustom: #e50076;
+$navLinkColorCustom: #e50076;
+$sidebarLinkColorCustom: #e50076;
+$footerTextColorCustom: #e50076;
+$contrast-color: #e50076;
+$link-color: #e50076;
+$buttonHoverBgColorCustom: #e50076;
+$borderColorCustom: #e50076;
+$navbar-bg: #e50076;
+
+$bfi-pink: #e50076;
 
 $body-color: #000000;
 $code-color: #000000;
@@ -28,10 +34,10 @@ $buttonBgColorCustom: #f5f4f2;
 
 $code-block-bg: #FFFFFF;
 
-$mainfont: 'Noto Sans', Arial, sans-serif !default;
-$body-font-family: 'Noto Sans', Arial, sans-serif !default;
-$font-family-sans-serif: 'Noto Sans', Arial, sans-serif !default;
-$heading-font: 'Noto Sans', Arial, sans-serif  !default;
+$mainfont: 'Source Sans Pro', sans-serif !default;
+$body-font-family: 'Source Sans Pro', sans-serif !default;
+$font-family-sans-serif: 'Source Sans Pro', sans-serif !default;
+$heading-font: 'Source Sans Pro', sans-serif  !default;
 
 
 /*-- scss:rules --*/
@@ -122,16 +128,28 @@ a {
 }
 
 .btn {
-  background-color: $rss-yellow;
+  background-color: $bfi-pink;
   color: $body-color;
   margin-top: 25px;
   margin-bottom: 35px;
   padding: 8px;
   border-style: solid;
-  border-color: $rss-yellow;
+  border-color: $bfi-pink;
   border-radius: 5px;
   border-width: 1px;
   line-height: normal !important;
+}
+
+td{
+  .btn {
+    color: white !important;
+  }
+}
+
+#modal-body2 {
+  .btn {
+    color: white !important;
+  }
 }
 
 .page-item {
@@ -147,7 +165,7 @@ a {
 .tag {
   background-color: $body-bg;
   color: $body-color;
-  border-color: $link-color;
+  border-color: $bfi-pink;
   padding: 3px 6px;
   font-size: x-small;
   text-align: center;
@@ -425,4 +443,3 @@ select {
 .observablehq--undefined {
   display: none !important;
 }
-
