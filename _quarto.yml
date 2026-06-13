@@ -14,7 +14,7 @@ website:
     background: "#e50076"
     logo: https://www.bfi.org.uk/dist/client/0207614d447715c2d2b9.svg
     logo-alt: Logo of British Film Institute
-    left:
+    right:
       - href: index.qmd
         text: Home
 
@@ -24,7 +24,7 @@ format:
     theme:
       - cosmo
       - assets/css/styles.scss
-    css: assets/css/styles.css
+    # css: assets/css/styles.css
     toc: true
 
 execute:
