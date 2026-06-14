@@ -1,0 +1,19 @@
+Name,Description
+Data access,"Dataset is difficult to access
+"
+Data linkage,"Dataset is not machine-readable, well-formatted, and/or interoperable
+"
+Data quality,"Data quality needs to be improved, validated, and/or verified
+"
+Data sharing,"Data usage rights are unclear or restrictive
+"
+Misc,"Challenges or gaps that do not fit into the other categories
+"
+Standardisation and Harmonisation,"Datasets are not standardised
+"
+Sufficiency,"Dataset is missing important variables or types of information
+"
+Timeliness,"Data is not released promptly or is otherwise out of date
+"
+Wish,"Dataset does not exist
+"
