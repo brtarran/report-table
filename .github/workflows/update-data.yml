@@ -27,6 +27,7 @@ jobs:
       - name: Update data
         env:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
         run: |
           source("R/get_data.R")
         shell: Rscript {0}
