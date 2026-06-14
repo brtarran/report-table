@@ -1,1 +1,1 @@
-airtable_base_id = "appCGMtdXOaqhWh4y"
+airtable_base_id = Sys.getenv("AIRTABLE_BASE_ID")

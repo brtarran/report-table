@@ -25,6 +25,16 @@ if (file.exists(local_data_path)) {
   reports_raw <- read_airtable(reports_at) |> as_tibble()
 }
 
+reports_raw <- reports_raw |>
+  filter(`Publication Status` == "Published")
+
+expected_cols <- c("Title", "Authors", "Publication Date", "Description",
+                    "Report Format", "Publication Status", "URL",
+                    "Publication type", "Topic/theme")
+
+missing_cols <- setdiff(expected_cols, names(reports_raw))
+reports_raw[missing_cols] <- NA
+
 # Normalize and extract fields we need
 normalize_multi_value <- function(value) {
   if (is.null(value) || length(value) == 0 || all(is.na(value))) {
