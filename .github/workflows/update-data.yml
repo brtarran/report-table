@@ -19,9 +19,10 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-renv@v2
-        with:
-          cache-version: 1
+      - name: Install dependencies
+        run: |
+          install.packages(c("readr", "dplyr", "tidyr", "purrr", "glue", "stringr", "rairtable"))
+        shell: Rscript {0}
 
       - name: Update data
         env:
