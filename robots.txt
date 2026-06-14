@@ -1,1 +1,1 @@
-Sitemap: /sitemap.xml
+Sitemap: https://brtarran.github.io/report-table/sitemap.xml
