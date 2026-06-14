@@ -1,8 +1,5 @@
 typography:
   fonts:
-    - family: Noto Sans
+    - family: "Source Sans 3"
       source: google
-    - family: Noto Sans
-      source: google
-  base: Noto Sans
-  headings: Noto Sans
+  base: "Source Sans 3"

@@ -1,4 +1,4 @@
-# Poverty Data Gaps
+# BFI RSU resources
 
 This interactive explorer:
 
@@ -13,13 +13,6 @@ This interactive explorer:
 * Commit to GitHub, and it will automatically re-deploy.
 * The data from airtable will not update when only editing the text.
 
-### Adding a new page
-
-* To add a new tab, create a new file called `page.qmd` where `page` is whatever you want the URL to be. For an example, look at `about.qmd`.
-* Update the list of tabs in the `_quarto.yml` file (around line 25-28).
-* In the `page.qmd` file, add information such as the page title to the YAML block at the top (the bit in between the `---`). Beneath the YAML block, add any Markdown text you wish.
-* You can also add raw HTML if you need to. See the [Quarto documentation](https://quarto.org/docs/authoring/markdown-basics.html#raw-content) for an example of adding an iframe for e.g. embedding an external visualisation.
-
 ## Updating the data
 
 * Make any required changes to the airtable data.
@@ -29,13 +22,12 @@ This interactive explorer:
 
 ## Changing the airtable base
 
-* Open `R/config.R` and edit the ID of the airtable base.
-* In the GitHub repository, go to *Secrets and variables* and add a new repository secret called `AIRTABLE_API_KEY` which contains your airtable API key. 
-* Open `about.qmd` and edit URL for the airtable form to submit a new data gap, and make sure the airtable form is set to be shared with anyone on the web.
+* In the GitHub repository, go to *Secrets and variables* and add a new repository secret called `AIRTABLE_API_KEY` which contains your airtable API key, and `AIRTABLE_BASE_ID`, which contains your airtable base ID. 
 
 To run locally:
 
-* Open or create a `.Renviron` file containing your airtable API key in the form `AIRTABLE_API_KEY="XXX"`
+* Open or create a `.Renviron` file containing your airtable API key and base ID in the form `AIRTABLE_API_KEY="XXX"`, `AIRTABLE_BASE_ID="XXX"`
+* Or, if you'd prefer not to run the API and use a local file, download the airtable as a csv file and save as `data/sample_reports.csv`
 
 ## Changing the GitHub repository
 
@@ -45,6 +37,7 @@ To run locally:
 * Create a Personal Access Token in your GitHub settings (Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens).
 * Give it `contents: read and write` and `workflows: read and write` permissions for the repository.
 * Add it as a repository secret named `PAT`.
-* In the GitHub repository, go to *Secrets and variables* and add a new repository secret called `AIRTABLE_API_KEY` which contains your airtable API key. 
+* In the GitHub repository, go to *Secrets and variables* and add a new repository secret called `AIRTABLE_API_KEY` which contains your airtable API key, and `AIRTABLE_BASE_ID`, which contains your airtable base ID.  
 
-
+## Acknowledgement
+Source code adapted from the [Poverty Data Gaps project](https://github.com/royal-statistical-society/poverty-data-gaps).
