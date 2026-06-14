@@ -1,5 +1,6 @@
 typography:
   fonts:
-    - family: "Source Sans 3"
+    - family: Source Sans Pro
       source: google
-  base: "Source Sans 3"
+  base: Source Sans Pro
+  headings: Source Sans Pro

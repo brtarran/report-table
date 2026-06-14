@@ -1,10 +1,4 @@
 /*-- scss:defaults --*/
-@import 'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap';
-
-#quarto-content {
-  font-family: 'Source Sans Pro', sans-serif;
-  color: black;
-}
 
 $headlineColorCustom: #e50076;
 $headingColorCustom: #e50076;
@@ -73,8 +67,6 @@ tbody tr:nth-child(odd) {
 .reports-table .observablehq table th:nth-child(6),
 .reports-table .observablehq table td:nth-child(6) { width: 15%; }
 
-
-
 .panel-tabset {
   padding-top: 20px !important;
 }
@@ -97,14 +89,6 @@ p code:not(.sourceCode), li code:not(.sourceCode), td code:not(.sourceCode) {
 
 a {
   text-decoration: none;
-}
-
-// .navbar-logo {
-//   max-height: 40px !important;
-// }
-
-.navbar {
-  font-family: 'Source Sans 3';
 }
 
 .btn {
