@@ -26,6 +26,8 @@ format:
       - assets/css/styles.scss
     # css: assets/css/styles.css
     toc: true
+    include-in-header: 
+      - csp.html
 
 execute:
   echo: false
