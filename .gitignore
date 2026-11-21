@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 *.html
+!csp.html
 *_files/
 /.quarto/
 **/*.quarto_ipynb
